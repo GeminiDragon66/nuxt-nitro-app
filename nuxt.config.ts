@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     supabaseUrl: process.env.NUXT_SUPABASE_URL,
     supabaseServiceKey: process.env.NUXT_SUPABASE_SERVICE_KEY,
+    adminPassword: process.env.NUXT_ADMIN_PASSWORD,
     public: {
       supabaseUrl: process.env.NUXT_SUPABASE_URL,
       supabaseAnonKey: process.env.NUXT_SUPABASE_ANON_KEY

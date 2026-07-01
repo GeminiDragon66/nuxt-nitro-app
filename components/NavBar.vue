@@ -47,6 +47,7 @@ const navLinks: NavLink[] = [
   { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact' },
   { label: 'About', to: '/about' },
+  { label: 'Admin', to: '/admin' },
   { label: 'Docs', to: 'https://nuxt.com/docs', external: true }
 ]
 
