@@ -49,10 +49,24 @@ create table if not exists public.contact_messages (
 create index if not exists contact_messages_created_at_idx on public.contact_messages(created_at desc);
 create index if not exists contact_messages_is_read_idx on public.contact_messages(is_read);
 
--- 3. Row Level Security
--- Enable RLS on both tables
+-- 3. Blog Comments Table
+create table if not exists public.blog_comments (
+  id bigint primary key generated always as identity,
+  post_id bigint not null references public.blog_posts(id) on delete cascade,
+  author_name text not null,
+  author_email text not null,
+  content text not null,
+  is_approved boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists blog_comments_post_id_idx on public.blog_comments(post_id, is_approved);
+create index if not exists blog_comments_created_at_idx on public.blog_comments(created_at desc);
+
+-- 4. Row Level Security
 alter table public.blog_posts enable row level security;
 alter table public.contact_messages enable row level security;
+alter table public.blog_comments enable row level security;
 
 -- Blog posts: public can read published posts, only service_role can write
 create policy "public can read published blog posts"
@@ -77,6 +91,26 @@ create policy "public can submit contact messages"
 
 create policy "service_role can manage contact messages"
   on public.contact_messages
+  for all
+  to service_role
+  using (true)
+  with check (true);
+
+-- Blog comments: anon can read approved comments
+create policy "public can read approved comments"
+  on public.blog_comments
+  for select
+  to anon
+  using (is_approved = true);
+
+create policy "public can submit comments"
+  on public.blog_comments
+  for insert
+  to anon
+  with check (true);
+
+create policy "service_role can manage comments"
+  on public.blog_comments
   for all
   to service_role
   using (true)

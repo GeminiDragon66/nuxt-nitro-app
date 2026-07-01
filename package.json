@@ -17,6 +17,7 @@
     "@nuxt/icon": "^2.2.5",
     "@nuxt/ui": "^4.9.0",
     "@nuxtjs/color-mode": "^4.0.1",
+    "@sentry/nuxt": "^10.63.0",
     "@supabase/supabase-js": "^2.109.0",
     "nuxt": "^4.4.8",
     "pg": "^8.22.0",
