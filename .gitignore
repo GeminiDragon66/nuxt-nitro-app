@@ -23,5 +23,8 @@ logs
 .env.*
 !.env.example
 
+# Vercel output
+.vercel
+
 # Supabase temp files
 supabase/.temp
