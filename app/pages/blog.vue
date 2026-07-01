@@ -18,9 +18,10 @@
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <UCard
         v-for="post in posts"
-        :key="post.title"
-        class="bg-gray-900/50 border-gray-800 hover:border-gray-700 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+        :key="post.slug || post.title"
+        class="bg-gray-900/50 border-gray-800 hover:border-gray-700 hover:shadow-lg hover:shadow-green-500/5 transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
         :ui="{ body: { padding: 'p-0' } }"
+        @click="navigateTo(`/blog/${post.slug}`)"
       >
         <div class="p-6">
           <div class="flex items-center gap-2 mb-3">
@@ -59,6 +60,8 @@
 
 <script setup lang="ts">
 interface BlogPost {
+  id: number
+  slug: string
   title: string
   excerpt: string
   category: string
@@ -69,7 +72,6 @@ interface BlogPost {
 }
 
 const loading = ref(true)
-const apiError = ref(false)
 
 // Start with empty array, will be populated from API or fallback
 const posts = ref<BlogPost[]>([])
@@ -77,6 +79,8 @@ const posts = ref<BlogPost[]>([])
 // Fallback static data if API is unavailable
 const fallbackPosts: BlogPost[] = [
   {
+    id: 0,
+    slug: 'getting-started-nuxt-4',
     title: 'Getting Started with Nuxt 4: A Comprehensive Guide',
     excerpt: 'Learn how to set up your first Nuxt 4 project with the new directory structure, Nitro engine, and automatic imports. Everything you need to know to get started.',
     category: 'Getting Started',
@@ -86,6 +90,8 @@ const fallbackPosts: BlogPost[] = [
     readTime: 8
   },
   {
+    id: 0,
+    slug: 'understanding-nitro-engine',
     title: 'Understanding the Nitro Engine in Nuxt 4',
     excerpt: 'Deep dive into the Nitro server engine that powers Nuxt 4. Learn about API routes, middleware, and hybrid rendering capabilities.',
     category: 'Nitro',
@@ -95,6 +101,8 @@ const fallbackPosts: BlogPost[] = [
     readTime: 12
   },
   {
+    id: 0,
+    slug: 'building-uis-nuxt-ui-v4',
     title: 'Building Beautiful UIs with Nuxt UI v4',
     excerpt: 'Explore the modern component library that comes with Nuxt UI v4. Discover how to leverage Tailwind CSS v4 for stunning, accessible interfaces.',
     category: 'UI/UX',
@@ -104,6 +112,8 @@ const fallbackPosts: BlogPost[] = [
     readTime: 6
   },
   {
+    id: 0,
+    slug: 'fullstack-nuxt-4-nitro',
     title: 'Full-Stack Development with Nuxt 4 and Nitro',
     excerpt: 'Combine the power of Vue frontend with Nitro backend to build complete full-stack applications without leaving the Nuxt ecosystem.',
     category: 'Full-Stack',
@@ -113,6 +123,8 @@ const fallbackPosts: BlogPost[] = [
     readTime: 10
   },
   {
+    id: 0,
+    slug: 'typescript-best-practices-nuxt',
     title: 'TypeScript Best Practices for Nuxt Projects',
     excerpt: 'Improve your Nuxt development experience with TypeScript. Learn about type-safe routes, auto-generated types, and composable patterns.',
     category: 'TypeScript',
@@ -122,6 +134,8 @@ const fallbackPosts: BlogPost[] = [
     readTime: 7
   },
   {
+    id: 0,
+    slug: 'deploying-nuxt-4-edge',
     title: 'Deploying Nuxt 4 Applications to the Edge',
     excerpt: 'Learn how to deploy your Nuxt 4 apps to edge networks for optimal performance worldwide. Compare Vercel, Netlify, and Cloudflare options.',
     category: 'Deployment',
@@ -150,7 +164,6 @@ async function fetchPosts() {
   } catch {
     // API unavailable, use fallback data
     console.warn('Blog API unavailable, using static data')
-    apiError.value = true
     posts.value = fallbackPosts
   } finally {
     loading.value = false
