@@ -1,0 +1,15 @@
+{
+  "framework": "nuxt",
+  "buildCommand": "npx nuxt build",
+  "outputDirectory": ".output",
+  "installCommand": "npm install",
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "master": true
+    }
+  },
+  "env": {
+    "NITRO_PRESET": "vercel"
+  }
+}
