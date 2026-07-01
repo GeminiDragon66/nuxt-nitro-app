@@ -20,6 +20,30 @@
         >
           {{ link.label }}
         </NuxtLink>
+
+        <!-- Auth Links -->
+        <div class="ml-2 pl-2 border-l border-gray-800/50 flex items-center gap-1">
+          <template v-if="authUser">
+            <NuxtLink
+              to="/auth/profile"
+              class="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors text-gray-300 hover:text-white hover:bg-gray-800/50"
+              :class="{ 'text-white bg-gray-800/50': isActive('/auth/profile') }"
+            >
+              <UIcon name="i-heroicons-user-20-solid" class="w-4 h-4" />
+              <span class="hidden sm:inline">{{ authUser.name }}</span>
+            </NuxtLink>
+          </template>
+          <template v-else>
+            <NuxtLink
+              to="/auth/login"
+              class="px-3 py-1.5 text-sm rounded-lg transition-colors text-gray-300 hover:text-white hover:bg-gray-800/50"
+              :class="{ 'text-white bg-gray-800/50': isActive('/auth/login') }"
+            >
+              Sign In
+            </NuxtLink>
+          </template>
+        </div>
+
         <a
           href="https://github.com/GeminiDragon66/nuxt-nitro-app"
           target="_blank"
@@ -35,6 +59,7 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const { user: authUser, fetchUser } = useAuth()
 
 interface NavLink {
   label: string
@@ -55,4 +80,8 @@ function isActive(path: string): boolean {
   if (path === '/') return route.path === '/'
   return route.path.startsWith(path)
 }
+
+onMounted(() => {
+  fetchUser()
+})
 </script>
